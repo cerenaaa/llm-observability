@@ -1,9 +1,5 @@
 name: CI
-"on":
-  push:
-    branches: ["main"]
-  pull_request:
-    branches: ["main"]
+on: [push, pull_request]
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -11,8 +7,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: '3.11'
       - run: pip install numpy pytest
-      - run: python -c "from cost_tracker import CostTracker; t=CostTracker(); cost=t.record('claude-sonnet-4-20250514',1000,200); assert cost>0; print(f'cost OK: \${cost:.6f}')"
+      - run: python -c "from cost_tracker import CostTracker; t=CostTracker(); cost=t.record('claude-sonnet-4-20250514',1000,200); assert cost>0; print(f'cost OK: ${cost:.6f}')"
       - run: python -c "from alerts import build_default_engine; e=build_default_engine(); alerts=e.evaluate({'latency_p95_ms':3000,'error_rate':0.01,'daily_cost_usd':1}); assert len(alerts)==1; print('alerts OK')"
       - run: python demo.py
